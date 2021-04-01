@@ -60,39 +60,49 @@ Fetch status of current Libre sensor
 #### metabolicFitnessStreaks(start, end)
 Fetch metabolic fitness streaks
 
-@param {Number} start Range start, time since unix epoch in milliseconds
-@param {Number} end Range end, time since unix epoch in milliseconds
+| name | type | description |
+-------|------|-------------|
+| start | Number | Range start, time since unix epoch in milliseconds |
+| end | Number | Range end, time since unix epoch in milliseconds |
 
 Returns Promise<Object> of streaks of good glucose scores
 
 #### heartRateMetrics(start, end)
 Fetch heart rate metrics, presumably pulled from Apple Health
 
-@param {Number} start Range start, time since unix epoch in milliseconds
-@param {Number} end Range end, time since unix epoch in milliseconds
+| name | type | description |
+-------|------|-------------|
+| start | Number | Range start, time since unix epoch in milliseconds |
+| end | Number | Range end, time since unix epoch in milliseconds |
 
 Returns Promise<Object> of heart rate metrics
 
 #### metabolicFitness(start, end)
 Fetch daily metabolic fitness score
 
-@param {Number} start Range start, time since unix epoch in milliseconds
-@param {Number} end Range end, time since unix epoch in milliseconds
+| name | type | description |
+-------|------|-------------|
+| start | Number | Range start, time since unix epoch in milliseconds |
+| end | Number | Range end, time since unix epoch in milliseconds |
 
 Returns Promise<Object> of daily overall metabolic fitness score
 
 #### getInsightFeed(start, end)
 Fetch insight / news feed
 
-@param {Number} start Range start, time since unix epoch in milliseconds
-@param {Number} end Range end, time since unix epoch in milliseconds
+| name | type | description |
+-------|------|-------------|
+| start | Number | Range start, time since unix epoch in milliseconds |
+| end | Number | Range end, time since unix epoch in milliseconds |
 
 Returns Promise<Object> of insights / news feeds
 
 #### glucoseHistory(start, end)
 Fetch raw glucose scores of range
 
-@param {Number} start Range start, time since unix epoch in milliseconds
-@param {Number} end Range end, time since unix epoch in milliseconds
+| name | type | description |
+-------|------|-------------|
+| start | Number | Range start, time since unix epoch in milliseconds |
+| end | Number | Range end, time since unix epoch in milliseconds |
 
 Returns Promise<Object> of raw glucose scores along with stats
