@@ -6,17 +6,17 @@ This API is not associated with Levels Health and you shouldn't bother them if t
 
 ### Installation
 
-```
+```bash
 npm install --save levels-health-unofficial
 ```
 
-```
+```bash
 yarn install levels-health-unofficial
 ```
 
 ### Usage
 
-```
+```javascript
 const LevelsHealth = require('levels-health-unofficial')
 
 // Class was used to hold `token` and constructors can't be async`
