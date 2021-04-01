@@ -20,6 +20,14 @@ const $executeQuery = Symbol('executeQuery')
 class Levels {
   constructor() {}
 
+  /**
+   * Log in to Levels Health using Cogntio
+   *
+   * @param {String} email User email
+   * @param {String} password User password
+   *
+   * @returns {Promise<String>} JWT token, also saves to class instance so no need to pass around.
+   */
   async login(email, password) {
     const levelsCognitoPool = {
       UserPoolId: 'us-east-2_HrbIXNNBD',
@@ -52,18 +60,39 @@ class Levels {
     })
   }
 
-  async [$executeQuery](query, range) {
-    if (query.variables && query.variables.range) {
-      let start = range && range.start
-      let end = range && range.end
+  /**
+   * Internal helper function to execute Graph queries
+   *
+   * @param {String} query GraphQL query
+   * @param {[Object]} variables Variables for the query
+   * @param {[Object]} variables.range Query time range
+   *
+   * @returns {Promise<Object>} Result of query
+   */
+  async [$executeQuery](query, variables = {}) {
+    if (query.variables) {
+      if (query.variables.range) {
+        let start = range && range.start
+        let end = range && range.end
 
-      if (!start || !end) {
-        // Use the app standard one day range
-        start = start || dayjs().subtract(1, 'days').startOf('day').toDate(),
-        end = end || dayjs().add(1, 'days').startOf('day').toDate()
+        if (!start || !end) {
+          // Use the app standard one day range
+          start = start || dayjs().subtract(1, 'days').startOf('day').valueOf(),
+          end = end || dayjs().add(1, 'days').startOf('day').valueOf()
+        }
+
+        query.variables.range = [ start, end ]
       }
 
-      query.variables.range = [ start, end ]
+      if (query.variables.prevStatRange) {
+        // All queries that have prevStatRange have range
+        const [ start, end ] = query.variables.range
+
+        const prevStart = dayjs(start).subtract(2, 'days').startOf('day').valueOf()
+        const prevEnd = dayjs(end).subtract(1, 'days').startOf('day').valueOf()
+
+        query.variables.prevStatRange = [ prevStart, prevEnd ]
+      }
     }
 
     const res = await fetch('https://app.levelshealth.com/api/graphql', {
@@ -77,8 +106,98 @@ class Levels {
     return res.json()
   }
 
+  /**
+   * Fetch data of your account
+   *
+   * @returns {Promise<Object>} Your profile
+   */
+  async userData() {
+    return this[$executeQuery](GRAPH_QUERIES.getUserData)
+  }
+
+  /**
+   * Request that Levels re-fetch sensor data. Already automated so don't call this constantly.
+   */
+  async requestSensorRefresh() {
+    return this[$executeQuery](GRAPH_QUERIES.requestSensorRefresh)
+  }
+
+  /**
+   * Fetch daily stats of glucose high-low and scores
+   *
+   * @returns {Promise<Object>} Scores & glucose ranges
+   */
+  async findZones() {
+    return this[$executeQuery](GRAPH_QUERIES.findZones)
+  }
+
+  /**
+   * Fetch status of current Libre sensor
+   *
+   * @returns {Promise<Object>} Sensor status
+   */
+  async getSensorStatus() {
+    return this[$executeQuery](GRAPH_QUERIES.getSensorStatus)
+  }
+
+  /**
+   * Fetch metabolic fitness streaks
+   *
+   * @param {Number} start Range start, time since unix epoch in milliseconds
+   * @param {Number} end Range end, time since unix epoch in milliseconds
+   *
+   * @returns {Promise<Object>} Streaks of good glucose scores
+   */
+  async metabolicFitnessStreaks(start, end) {
+    return this[$executeQuery](GRAPH_QUERIES.metabolicFitnessStreaks, { start, end })
+  }
+
+  /**
+   * Fetch heart rate metrics, presumably pulled from Apple Health
+   *
+   * @param {Number} start Range start, time since unix epoch in milliseconds
+   * @param {Number} end Range end, time since unix epoch in milliseconds
+   *
+   * @returns {Promise<Object>} Heart rate metrics
+   */
+  async heartRateMetrics(start, end) {
+    return this[$executeQuery](GRAPH_QUERIES.heartRateMetrics, { start, end })
+  }
+
+  /**
+   * Fetch daily metabolic fitness score
+   *
+   * @param {Number} start Range start, time since unix epoch in milliseconds
+   * @param {Number} end Range end, time since unix epoch in milliseconds
+   *
+   * @returns {Promise<Object>} Daily overall metabolic fitness score
+   */
   async metabolicFitness(start, end) {
-    return this[$executeQuery](GRAPH_QUERIES.mfsDaily)
+    return this[$executeQuery](GRAPH_QUERIES.mfsDaily, { start, end })
+  }
+
+  /**
+   * Fetch insight / news feed
+   *
+   * @param {Number} start Range start, time since unix epoch in milliseconds
+   * @param {Number} end Range end, time since unix epoch in milliseconds
+   *
+   * @returns {Promise<Object>} Insights / news feeds
+   */
+  async getInsightFeed(start, end) {
+    return this[$executeQuery](GRAPH_QUERIES.getInsights, { start, end })
+  }
+
+  /**
+   * Fetch raw glucose scores of range
+   *
+   * @param {Number} start Range start, time since unix epoch in milliseconds
+   * @param {Number} end Range end, time since unix epoch in milliseconds
+   *
+   * @returns {Promise<Object>} Raw glucose scores along with stats
+   */
+  async glucoseHistory(start, end) {
+    return this[$executeQuery](GRAPH_QUERIES.glucoseHistory, { start, end })
   }
 }
 
