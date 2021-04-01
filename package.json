@@ -1,6 +1,6 @@
 {
   "name": "levels-health-unofficial",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Unofficial API for Levels Health glucose tracker",
   "main": "src/index.js",
   "scripts": {
