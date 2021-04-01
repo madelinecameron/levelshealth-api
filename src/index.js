@@ -71,6 +71,8 @@ class Levels {
    */
   async [$executeQuery](query, variables = {}) {
     if (query.variables) {
+      const { range } = variables
+
       if (query.variables.range) {
         let start = range && range.start
         let end = range && range.end
