@@ -1,0 +1,17 @@
+{
+  "name": "levels-health-unofficial",
+  "version": "0.0.1",
+  "description": "",
+  "main": "src/index.js",
+  "module": "true",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Madeline <maddie@qnzl.co>",
+  "license": "MIT",
+  "dependencies": {
+    "amazon-cognito-identity-js": "^4.6.0",
+    "dayjs": "^1.10.4",
+    "fetch": "^1.1.0"
+  }
+}
