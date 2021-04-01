@@ -1,9 +1,8 @@
 {
   "name": "levels-health-unofficial",
   "version": "0.0.1",
-  "description": "",
+  "description": "Unofficial API for Levels Health glucose tracker",
   "main": "src/index.js",
-  "module": "true",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
